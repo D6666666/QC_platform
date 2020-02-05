@@ -40,32 +40,60 @@
             <li><a href="">测试工具</a></li>
           </ul>
         </div>
+
+        {% if type == 'list' %}
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h3 class="sub-header">项目列表</h3>
+          <h2 class="sub-header">项目列表
+            <button type="button" class="btn btn-primary" style="float: right"
+            onclick="window.location.href='/manage/add_project/'">新增</button>
+          </h2>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
+                  <th>id</th>
+                  <th>名称</th>
+                  <th>描述</th>
+                  <th>状态</th>
+                  <th>创建时间</th>
                 </tr>
               </thead>
               <tbody>
+                {% for project in projects %}
                 <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
+                  <td>{{ project.id }}</td>
+                  <td>{{ project.name }}</td>
+                  <td>{{ project.describe }}</td>
+                  {% if project.status == False %}
+                    <td>关闭</td>
+                  {% endif %}
+                  {% if project.status == True %}
+                    <td>开启</td>
+                  {% endif %}
+                  <td>{{ project.create_time }}</td>
                 </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
         </div>
+        {% endif %}
+
+        {% if type == 'add' %}
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+          <h2 class="sub-header">新增项目
+            <button type="button" class="btn btn-primary" style="float: right;"
+            onclick="window.location.href='/manage/project_manage/'">返回</button>
+          </h2>
+
+        </div>
+        {% endif %}
+
       </div>
     </div>
 {% endblock %}
+
+
+
+
 
