@@ -14,8 +14,14 @@ def login_action(request):
     if request.method == 'POST':
         username = request.POST.get('username','')
         password = request.POST.get('password', '')
-        user = auth.authenticate(username=username,password=password)  #登陆验证
-        if user is not None:
-            pass
+        if username == '' or password == '':
+            return render(request,'index.html',{'error':'用户名或者密码不能为空！'})
+        else:
+            user = auth.authenticate(username=username,password=password)  #登陆验证
+            if user is not None:
+                auth.login(request,user) #记录登陆状态
+                pass
+            else:
+                return render(request,'index.html',{'error':'用户名或者密码错误！'})
 
 

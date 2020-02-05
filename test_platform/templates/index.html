@@ -25,13 +25,14 @@
     <div class="container">
 
       <form class="form-signin" method="post" action="/login_action/">
-        <h2 class="form-signin-heading">测试管理平台</h2>
+        <h1 class="form-signin-heading" style="text-align:center;color: #337ab7;">测试管理平台</h1>
         <label for="inputname" class="sr-only">用户名</label>
-        用户名：<input type="text" id="inputname" name="username" class="form-control" placeholder="请输入用户名" required>
+        <input type="text" id="inputname" name="username" class="form-control" placeholder="请输入用户名" required>
         <label for="inputPassword" class="sr-only">密码</label>
-        密码：<input type="password" id="inputPassword" name="password" class="form-control" placeholder="请输入密码" required>
-        {{ error }}
-        {{% csrf_token %}}
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="请输入密码" required>
+        <p style="color: red;">{{ error }}<p>
+        {% csrf_token %}
+
         <!--<div class="checkbox">-->
           <!--<label>-->
             <!--<input type="checkbox" value="remember-me"> Remember me-->
