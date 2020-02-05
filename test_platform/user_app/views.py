@@ -21,15 +21,15 @@ def login_action(request):
             if user is not None:
                 auth.login(request,user) #记录登陆状态
                 request.session['user'] = username
-                return HttpResponseRedirect("/project_manage/")
+                return HttpResponseRedirect("/manage/project_manage/")
             else:
                 return render(request,'index.html',{'error':'用户名或者密码错误！'})
 
 
 #退出登陆
 def logout(request):
-    auth.logout(request)
-    response = HttpResponseRedirect('/index/')
+    auth.logout(request) #清除登陆状态
+    response = HttpResponseRedirect('/')
     return  response
 
 
