@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from project_app.forms import ProjectForm
 
 # Create your views here.
-
+#进入项目列表
 @login_required  #判断用户是否登陆
 def project_manage(request):
     username = request.session.get('user','') #读取浏览器session
@@ -21,8 +21,9 @@ def add_project(request):
             #获取表单数据
             name = form.cleaned_data['name']
             describe = form.cleaned_data['describe']
+            status = form.cleaned_data['status']
             #保存表单数据到库
-            Project.objects.create(name=name,describe=describe)
+            Project.objects.create(name=name,describe=describe,status=status)
             return HttpResponseRedirect('/manage/project_manage/')
     else:  #进入表单页面的get请求
         form = ProjectForm()
