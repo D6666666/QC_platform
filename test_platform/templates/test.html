@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+ <head>
+  <meta charset="utf-8" />
+  <meta name="renderer" content="webkit" />
+  <meta name="force-rendering" content="webkit" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+  <title>HTTP请求GET/POST接口测试工具  - 天行数据TianAPI</title>
+  <meta name="description" content="HTTP在线POST/GET请求测试工具，本工具可调试任何支持GET/POST请求的应用，支持批量添加参数格式化预览JSON数据等。。" />
+  <link rel="shortcut icon" href="/static/favicon.ico" />
+  <link rel="bookmark" href="/static/favicon.ico" type="image/x-icon" />
+  <link rel="stylesheet" href="https://wenda.tianapi.com/static/css/icon.css" />
+  <link href="https://wenda.tianapi.com/static/css/bootstrap.css" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="/static/tianapi.css?v=3.0" />
+  <script type="text/javascript" src="https://wenda.tianapi.com/static/js/jquery.min.js"></script>
+  <script src="/static/layer/layer.js"></script>
+  <script src="/static/tianapi.js"></script>
+ </head>
+ <body>
+  <header>
+  </header>
+  <div class="container">
+   <div class="clearfix">
+    <div class="col-xs-12 col-sm-8">
+     <h3>HTTP请求在线测试工具</h3>
+     <div style="float: right;margin-top:-30px;">
+      <p></p>
+     </div>
+     <form style="margin-top:38px;font-size: 14px;" class="form-horizontal form">
+      <div class="form-group">
+       <label class="col-xs-12 col-sm-2 col-md-2 control-label">请求地址</label>
+       <div class="col-sm-10">
+        <select style="float: left;width: 14%;vertical-align:middle;" class="select" name="method" id="method"> <option value="GET">GET</option> <option value="POST">POST</option> </select>
+        <input id="mpurl" value="" class="form-control" style="vertical-align:middle;float:right;width: 84%;" placeholder="填写完整地址，以http或https://开头" type="text" name="mpurl" required="" />
+       </div>
+      </div>
+      <div class="form-group">
+       <label class="col-xs-12 col-sm-2 col-md-2 control-label">请求参数</label>
+       <div class="col-sm-10">
+        <div class="thumbnail">
+         <table id="params_table" class="table table-bordered">
+          <thead>
+           <tr>
+            <th width="35%">参数名称</th>
+            <th>参数值</th>
+           </tr>
+          </thead>
+          <tbody>
+          </tbody>
+         </table>
+         <input type="button" name="add_param" id="add_param" value="添加参数" class="btn btn-success" style="margin:-6px 0px 10px 12px;" />
+         <input type="button" name="listadd_param" id="listadd_param" value="高级模式" class="btn btn-success" style="margin: -6px 0px 10px 12px;" />
+        </div>
+       </div>
+      </div>
+      <div class="form-group" id="headerparam" style="display: none;">
+       <label class="col-xs-12 col-sm-2 col-md-2 control-label">Header：</label>
+       <div class="col-sm-10">
+        <div class="thumbnail">
+         <table id="header_table" class="table table-bordered">
+          <thead>
+           <tr>
+            <th width="35%" colspan="2">参数名称和值 （<a target="_blank" href="https://wenda.tianapi.com/article/108">Requests Header列表</a>）</th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr id="he0" class="header_p">
+            <td colspan="2"><input class="gethttp_header" type="text" name="header_value" id="header_value" style="width:82%" value="Content-Type: application/x-www-form-urlencoded" maxlength="100" /><a onclick="deltab(3,0)" class="loganniu param" type="button">删除参数</a></td>
+           </tr>
+          </tbody>
+         </table>
+         <input type="button" name="add_header" id="add_header" value="添加参数" class="btn btn-success" style="margin:-6px 0px 10px 12px;" />
+        </div>
+       </div>
+      </div>
+      <div class="form-group">
+       <label class="col-xs-12 col-sm-2 col-md-2 control-label"></label>
+       <div class="col-sm-10">
+        <input type="button" name="submit" onclick="checkSignature()" value="测试请求" style="width:100%;font-size: 14px;padding: 10px 0;" class="btn btn-lg btn-primary btn-block" />
+       </div>
+      </div>
+     </form>
+     <div class="gettishi">
+      <b>提示：</b>
+      <br />测试天行数据的接口自动加载所有必填参数和KEY
+      <br />本工具可调试任何支持GET/POST请求的应用
+      <br />点击右侧的放大查看可全屏预览返回的数据内容
+     </div>
+    </div>
+    <div class="col-sm-4" id="demoSendBox" style="margin:-32px 0 0 0;">
+     <div class="chatPanel form">
+       <pre>请求信息:<span class="getapitool"><a href="javascript:FangDa();">只看返回结果</a></span>
+<br />请求URI: <span id="getmethod"></span><span id="request_url"></span>
+执行时间: <span id="time"></span>
+请求参数: <span id="getparam"></span>
+<br />
+<b>Request Header:</b>
+<span id="getheader"></span>
+</pre>
+      </div>
+      <div id="donation">
+       <pre id="result"><span class="getapitool"><a href="//www.tianapi.com/jsonandxml.html" target="_blank">XML/JSON互转</a> <a href="//www.tianapi.com/json/" target="_blank">JSON管理</a></span>返回信息:
+<br />
+<span id="returnheader"></span>
+<span id="getdata"></span>
+</pre>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script type="text/javascript" src="/static/posturl.js?v=1.6"></script>
+  <script type="text/javascript" src="/bdtj.js"></script>
+ </body>
+</html>
