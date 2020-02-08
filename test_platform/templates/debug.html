@@ -7,6 +7,7 @@
 
     <div style="width:80%; margin-left: 20px;">
         <form action="/debug/" method="get" class="bs-example bs-example-form" role="form" style="margin-top: 30px">
+            <!--{% csrf_token %}-->
 
             <!--<div>-->
                 <!--<label style="float: left">项目：</label>-->
@@ -63,15 +64,15 @@
             </div>
             <p style="color:#8B8989">说明：以字典的方式设置参数，如：{"id":1, "name":"名称"}</p>
 
-            <p>验证数据：</p>
-            <div style="height: 100px">
-                <div style="float: left; width: 90%;">
-                    <textarea id="assert_text" class="form-control" rows="3" name=textarea></textarea>
-                </div>
-                <div style="margin-top: 38px; float: right; width: 10%;">
-                    <button type="button" class="btn btn-default" id="assert" style="float: right;margin-right: 10px;">验证</button>
-                </div>
-            </div>
+            <!--<p>验证数据：</p>-->
+            <!--<div style="height: 100px">-->
+                <!--<div style="float: left; width: 90%;">-->
+                    <!--<textarea id="assert_text" class="form-control" rows="3" name=textarea></textarea>-->
+                <!--</div>-->
+                <!--<div style="margin-top: 38px; float: right; width: 10%;">-->
+                    <!--<button type="button" class="btn btn-default" id="assert" style="float: right;margin-right: 10px;">验证</button>-->
+                <!--</div>-->
+            <!--</div>-->
 
             <div style="width: 100%; height: 60px;">
                 <button type="button" class="btn btn-success" id="send" style="float: right;margin-right: 10px;">调试</button>
@@ -89,7 +90,9 @@
 
 </fieldset>
 
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<!--<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>-->
+{% load static %}
+<script src='{% static "js/jquery.min.js" %}'></script>
 <script type="text/javascript">
 
     // let url_path = document.location.pathname;
@@ -102,12 +105,13 @@
 
         // 调试表格
         $("#send").click(function () {
+            //获取参数，通过css定位器
             let url = $("#req_url").val();
             let method = $('input[name="req_method"]:checked').val();
             let type = $('input[name="req_type"]:checked').val();
             let header = $("#req_header").val();
             let parameter = $("#req_parameter").val();
-
+            //判断参数，通过window.alert方法弹窗提示
             if(url === ""){
                 window.alert("请求的URL不能为空");
                 return;
@@ -131,7 +135,7 @@
                 }else{
                     window.alert(resp.message);
                 }
-            });
+            })
 
         });
 
@@ -201,5 +205,6 @@
 
 
     });
+
 </script>
 {% endblock %}
