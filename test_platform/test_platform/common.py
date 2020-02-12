@@ -1,7 +1,7 @@
 #!/usr/bin/env python 
 # coding:utf-8 
 #author:cq
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 
 
 def response_succeed(message="请求成功", data=''):

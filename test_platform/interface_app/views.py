@@ -24,7 +24,7 @@ def debug(request):
 
 
 #接口调试
-@csrf_exempt
+# @csrf_exempt
 @login_required
 def api_debug(request):
     if request.method == 'POST':
