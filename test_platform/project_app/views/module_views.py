@@ -36,7 +36,7 @@ def add_module(request):
 def edit_module(request,mid):
     module = Module.objects.get(id=mid)
     if request.method == 'POST':  #提交表单的post请求
-        form = ModuleForm(request.POST)  #用ProjectForm校验表单数据
+        # form = ModuleForm(request.POST)  #用ProjectForm校验表单数据
         # 如果是post,instance=article当前数据填充表单，并用data=request.POST获取到表单里的内容
         form = ModuleForm(instance=module, data=request.POST)
         form.save()  # 保存

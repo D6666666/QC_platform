@@ -9,5 +9,5 @@ class ProjectAdmin(admin.ModelAdmin):
 class ModuleAdmin(admin.ModelAdmin):
     list_display = ['name','create_time','id']
 
-admin.site.register(Project)
-admin.site.register(Module)
+admin.site.register(Project,ProjectAdmin)
+admin.site.register(Module,ModuleAdmin)
