@@ -6,14 +6,24 @@ from interface_app.forms import TestCaseForm
 from project_app.models import Module,Project
 from test_platform import common
 from interface_app.models import TestCase
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 # Create your views here.
 
 #请求用例管理页面
 @login_required
 def case_manage(request):
-    testcases = TestCase.objects.all()
+    # testcases = TestCase.objects.all()
+    testcases = TestCase.objects.get_queryset().order_by('id')
+    paginator = Paginator(testcases,10)
+    page = request.GET.get("page")
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        contacts = paginator.page(1)
+    except EmptyPage:
+        contacts = paginator.page(paginator.num_pages)
     if request.method == 'GET':
-        return render(request,'case_manage.html',{'type':'list',"testcases":testcases})
+        return render(request,'case_manage.html',{'type':'list',"testcases":contacts})
     else:
         return HttpResponse("404")
 
