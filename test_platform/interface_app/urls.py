@@ -11,5 +11,6 @@ urlpatterns = [
     path('debug/', views.debug),
     path('save_case/', views.save_case),
     path('get_project_list/', views.get_project_list),
+    path('search_case_name/', views.search_case_name),
     path('delete_case/<int:cid>/', views.delete_case),
 ]
