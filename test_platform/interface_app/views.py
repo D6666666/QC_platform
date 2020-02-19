@@ -96,18 +96,35 @@ def delete_case(request,cid):
 
 #新增&调试用例页面
 @login_required
-def debug(request):
+def add_case(request):
     if request.method == 'GET':
         form = TestCaseForm()
-        return render(request,'debug.html',{'form':form,'type':'debug'})
+        return render(request,'add_case.html',{'form':form,'type':'debug'})
     else:
         return HttpResponse("404")
 
+#新增用例
+@login_required
+def add_case(request):
+    if request.method == 'GET':
+        form = TestCaseForm()
+        return render(request,'add_case.html',{'form':form,'type':'add'})
+    else:
+        return HttpResponse("404")
+
+#编辑用例
+@login_required
+def edit_case(request,cid):
+    if request.method == 'GET':
+        case_id = request.GET.get("case_id")
+        return render(request,'edit_case.html',{'type':'edit'})
+    else:
+        return HttpResponse("404")
 
 #接口调试
 # @csrf_exempt
 @login_required
-def api_debug(request):
+def debug_case(request):
     if request.method == 'POST':
         url = request.POST.get("req_url",'')
         method = request.POST.get("req_method",'')

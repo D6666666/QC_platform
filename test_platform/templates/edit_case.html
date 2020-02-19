@@ -1,12 +1,12 @@
 {% extends "case_manage.html" %}
-{% block api_debug %}
+{% block edit_case %}
 <fieldset>
     <!--<div id="legend" class="">-->
         <!--<legend class="">调试接口用例</legend>-->
     <!--</div>-->
 
     <div style="width:80%; margin-left: 20px;">
-        <form action="/debug/" method="get" class="bs-example bs-example-form" role="form" style="margin-top: 30px">
+        <form action="/interface/edit_case/" method="get" class="bs-example bs-example-form" role="form" style="margin-top: 30px">
             {% csrf_token %}
 
             <div>
@@ -128,7 +128,7 @@
 
             // 调试接口
             console.log(type)
-            $.post("/interface/api_debug/", {
+            $.post("/interface/debug_case/", {
                 "req_url": url,
                 "req_method": method,
                 "req_type": type,
@@ -141,7 +141,6 @@
                     window.alert(resp.message);
                 }
             })
-
         });
 
         // 更新
@@ -180,12 +179,12 @@
                 // "assert_text": assert_text,
             }, function (resp) {
                 if(resp.success === "true"){
-                    window.alert(resp.message);
+                    alert(resp.message);
+                    window.location.reload();
                 }else{
-                    window.alert(resp.message);
+                    alert(resp.message);
                 }
             });
-
         });
 
         //验证数据接口

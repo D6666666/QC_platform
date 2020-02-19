@@ -45,7 +45,7 @@
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h2 class="sub-header">用例列表
             <button type="button" class="btn btn-primary" style="float: right"
-            onclick="window.location.href='/interface/debug/'">新增&调试</button>
+            onclick="window.location.href='/interface/add_case/'">新增&调试</button>
           </h2>
 
           <form class="navbar-form" method="get" action="/interface/search_case_name/">
@@ -80,7 +80,7 @@
                   <td>{{ case.req_method }}</td>
                   <td>{{ case.create_time }}</td>
                   <td>
-                    <a href="/manage/edit_project/{{ project.id }}">编辑</a>
+                    <a href="/interface/edit_case/{{ case.id }}">编辑</a>
                     <a href="/interface/delete_case/{{ case.id }}">删除</a>
                   </td>
                 </tr>
@@ -113,14 +113,14 @@
         </div>
         {% endif %}
 
-        {% if type == 'debug' %}
+        {% if type == 'add' %}
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h2 class="sub-header">接口用例调试
+          <h2 class="sub-header">新增用例
             <button type="button" class="btn btn-primary" style="float: right;"
             onclick="window.location.href='/interface/case_manage/'">返回</button>
           </h2>
           <div class="row">
-              {% block api_debug %}
+              {% block add_case %}
               {% endblock %}
           </div>
 
@@ -129,18 +129,13 @@
 
         {% if type == 'edit' %}
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-          <h2 class="sub-header">修改项目
+          <h2 class="sub-header">修改用例
             <button type="button" class="btn btn-primary" style="float: right;"
-            onclick="window.location.href='/manage/project_manage/'">返回</button>
+            onclick="window.location.href='/manage/case_manage/'">返回</button>
           </h2>
-          <div class="table-responsive">
-            <form role="form" method="post">
-
-              <br>
-              {{ form.as_p }}
-              <button type="submit" class="btn btn-primary">保存</button>  <!--type需要为submit才允许提交-->
-              <button type="button" class="btn success" onclick="window.location.href='/manage/project_manage/'">取消</button>
-            </form>
+          <div class="row">
+              {% block edit_case %}
+              {% endblock %}
           </div>
 
         </div>

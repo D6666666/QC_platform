@@ -1,0 +1,255 @@
+{% extends "case_manage.html" %}
+{% block add_case %}
+<fieldset>
+    <!--<div id="legend" class="">-->
+        <!--<legend class="">调试接口用例</legend>-->
+    <!--</div>-->
+
+    <div style="width:80%; margin-left: 20px;">
+        <form action="/interface/add_case/" method="get" class="bs-example bs-example-form" role="form" style="margin-top: 30px">
+            {% csrf_token %}
+
+            <div>
+                <label style="float: left">项目：</label>
+                <select class="form-control select2-single" id="project_name"
+                    style="width: 146px; margin-bottom: 10px;">
+                </select>
+
+                <label style="float: left;">模块：</label>
+                <select class="form-control select2-single" id="module_name"
+                        style="width: 146px; margin-bottom: 10px;"></select>
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-addon">名称</span>
+                <input id="req_name" type="text" class="form-control" placeholder="name">
+            </div>
+            <br>
+
+            <div class="input-group">
+                <span class="input-group-addon">URL</span>
+                <input id="req_url" type="text" class="form-control" placeholder="url">
+            </div>
+            <br>
+            <div>
+                <label>请求方法：</label>
+                <label class="radio-inline">
+                    <input type="radio" name="req_method" id="get" value="get" checked> GET
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="req_method" id="post" value="post"> POST
+                </label>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <label>参数类型：</label>
+                <label class="radio-inline">
+                    <input type="radio" name="req_type" id="from" value="from" checked> form-data
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="req_type" id="json" value="json"> JSON
+                </label>
+            </div>
+
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">Header</span>
+                <input id="req_header" type="text" class="form-control">
+            </div>
+            <p style="color:#8B8989">说明：以字典的方式设置参数，如：{"content-type": "application/json"}</p>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">参数</span>
+                <input id="req_parameter" type="text" class="form-control">
+            </div>
+            <p style="color:#8B8989">说明：以字典的方式设置参数，如：{"id":1, "name":"名称"}</p>
+
+            <!--<p>验证数据：</p>-->
+            <!--<div style="height: 100px">-->
+                <!--<div style="float: left; width: 90%;">-->
+                    <!--<textarea id="assert_text" class="form-control" rows="3" name=textarea></textarea>-->
+                <!--</div>-->
+                <!--<div style="margin-top: 38px; float: right; width: 10%;">-->
+                    <!--<button type="button" class="btn btn-default" id="assert" style="float: right;margin-right: 10px;">验证</button>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <div style="width: 100%; height: 60px;">
+                <button type="button" class="btn btn-success" id="send" style="float: right;margin-right: 10px;">调试</button>
+                <button type="button" class="btn btn-primary" id="update" style="float: right;margin-right: 10px;">保存</button>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div style="width:80%; margin-left: 20px;">
+        <p>返回结果：</p>
+        <textarea id="result" class="form-control" rows="10" name=textarea></textarea>
+        <!--<div id="formatresult" class="disrequestresult">-->
+            <!--<pre id="result" class="resulttab"></pre>-->
+	    <!--</div>-->
+    </div>
+
+</fieldset>
+<!--<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>-->
+{% load static %}
+<script src='{% static "js/jquery.min.js" %}'></script>
+<script src='{% static "js/jsProject.js" %}'></script>
+<script type="text/javascript">
+    //初始化菜单
+    ProjectInit('project_name','module_name')
+
+    // let url_path = document.location.pathname;
+    // let case_id = url_path.split("/")[3];
+
+    //调用获取用例信息的方法
+    // CaseInit(case_id);
+
+    $(document).ready(function () {
+        // 调试表格
+        $("#send").click(function () {
+            //获取参数，通过css定位器
+            let url = $("#req_url").val();
+            let method = $('input[name="req_method"]:checked').val();
+            let type = $('input[name="req_type"]:checked').val();
+            let header = $("#req_header").val();
+            let parameter = $("#req_parameter").val();
+            //判断参数，通过window.alert方法弹窗提示
+            if(url === ""){
+                window.alert("请求的URL不能为空");
+                return;
+            }else if (method === ""){
+                window.alert("请求的方法不能为空");
+                return;
+            }else if (parameter === ""){
+                parameter = "{}";
+            }
+
+            // 调试接口
+            console.log(type)
+            $.post("/interface/debug_case/", {
+                "req_url": url,
+                "req_method": method,
+                "req_type": type,
+                "req_header": header,
+                "req_parameter": parameter
+            }, function (resp) {
+                if(resp.success === "true"){
+                    $("#result").text(resp.data);
+                }else{
+                    window.alert(resp.message);
+                }
+            })
+        });
+
+        // 更新
+        $("#update").click(function () {
+            let project_name = $('select[id="project_name"]').val();
+            let module_name = $('select[id="module_name"]').val();
+            let name = $("#req_name").val();
+            let url = $("#req_url").val();
+            let method = $('input[name="req_method"]:checked').val();
+            let parameter = $("#req_parameter").val();
+            let req_type = $('input[name="req_type"]:checked').val();
+            let header = $("#req_header").val();
+            // let assert_text = $("#assert_text").val();
+
+            if (name === "") {
+                window.alert("名称不能为空");
+            // }else if (url === "") {
+            //     window.alert("请求的URL不能为空");
+            } else if (method === "") {
+                window.alert("请求的方法不能为空");
+            } else if (parameter === "") {
+                parameter = "{}";
+            }
+
+            // 保存用例接口
+            $.post("/interface/save_case/", {
+                // "cid": case_id,
+                "name": name,
+                "req_url": url,
+                "req_method": method,
+                "req_parameter": parameter,
+                "req_type": req_type,
+                "header": header,
+                "module": module_name,
+                "project":project_name,
+                // "assert_text": assert_text,
+            }, function (resp) {
+                if(resp.success === "true"){
+                    alert(resp.message);
+                    window.location.reload();
+                }else{
+                    alert(resp.message);
+                }
+            });
+        });
+
+        //验证数据接口
+        $("#assert").click(function () {
+
+            let result = $("#result").val();
+            let assert = $("#assert_text").val();
+
+            if (result === "" || assert === "") {
+                window.alert("验证数据不能为空！");
+            }
+
+            //window.alert("发送请求");
+            // 发送一个post请求
+            $.post("/interface/api_assert/", {
+                "result": result,
+                "assert": assert,
+            }, function (resp) {
+                //console.log("6666", resp);
+                window.alert(resp.message);
+            });
+
+        });
+
+
+    });
+</script>
+
+<!--解决Forbidden (CSRF token missing or incorrect.): /interface/api_debug/-->
+<script type="text/javascript">
+    $(document).ajaxSend(function(event, xhr, settings) {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    });
+</script>
+{% endblock %}
