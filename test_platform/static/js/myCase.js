@@ -1,66 +1,33 @@
+
 //获取指定case_id的用例信息
-var CaseInit = function (_cmbProject, _cmbModule, defaultProject, defaultModule) {
-    var cmbProject = document.getElementById(_cmbProject);
-    var cmbModule = document.getElementById(_cmbModule);
-    var dataList = [];
+var CaseInit = function (case_id) {
 
-    //window.alert(defaultProject);
-    //window.alert(defaultMudle);
-    //设置默认选项
-    function cmbSelect(cmb, str) {
-        for(var i=0; i< cmb.options.length; i++){
-            if(cmb.options[i].value == str){
-                cmb.selectedIndex = i;
-                return;
-            }
-        }
-    }
-    //创建下拉选项
-    function cmbAddOption(cmb, str, obj) {
-        console.log(str);
-        var option = document.createElement("option");
-        cmb.options.add(option);
-        option.innerHTML = str;
-        option.value = str;
-        option.obj = obj;
-    }
-    
-    //改变项目
-    function changeProject() {
-        cmbModule.options.length = 0;
-        //cmbModule.onchange = null;
-        if (cmbProject.selectedIndex == -1) {
-            return;
-        }
-        var item = cmbProject.options[cmbProject.selectedIndex].obj;
-        for (var i = 0; i < item.moduleList.length; i++) {
-            cmbAddOption(cmbModule, item.moduleList[i], null);
-        }
-
-        cmbSelect(cmbModule, defaultModule);
-    }
-
-    function getProjectList(){
-        // 调用项目服务列表接口
-        $.get("/interface/get_project_list", {}, function (resp) {
+    function getCaseInfo(){
+        // 获取某个用例信息
+        $.post("/interface/get_case_info/", {"caseId":case_id}, function (resp) {
             if(resp.success === "true"){
-                dataList = resp.data;
-                //遍历项目
-                for (var i = 0; i < dataList.length; i++) {
-                    cmbAddOption(cmbProject, dataList[i].name, dataList[i]);
+                let result = resp.data;
+                document.getElementById("req_name").value=result.name;
+                document.getElementById("req_url").value=result.url;
+                document.getElementById("req_header").value=result.req_header;
+                document.getElementById("req_parameter").value=result.req_parameter;
+                document.getElementById("assert_text").value = result.responses_assert;
+                if (result.req_method === "post"){
+                    document.getElementById('post').setAttribute("checked","")
                 }
-
-                cmbSelect(cmbProject, defaultProject);
-                changeProject();
-                cmbProject.onchange = changeProject;
+                if (result.req_method === "json"){
+                    document.getElementById('json').setAttribute("checked","")
+                }
+                //初始化菜单
+                ProjectInit('project_name','module_name', result.project_name, result.module_name)
+            }else{
+                window.alert("用例ID不存在")
             }
-
-            cmbSelect(cmbProject, defaultProject);
             //$("#result").html(resp);
         });
     }
-    // 调用getProjectList函数
-    getProjectList(); 
+    // getCaseInfo调用
+    getCaseInfo();
     
 };
 

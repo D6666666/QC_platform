@@ -64,19 +64,19 @@
             </div>
             <p style="color:#8B8989">说明：以字典的方式设置参数，如：{"id":1, "name":"名称"}</p>
 
-            <!--<p>验证数据：</p>-->
-            <!--<div style="height: 100px">-->
-                <!--<div style="float: left; width: 90%;">-->
-                    <!--<textarea id="assert_text" class="form-control" rows="3" name=textarea></textarea>-->
-                <!--</div>-->
-                <!--<div style="margin-top: 38px; float: right; width: 10%;">-->
-                    <!--<button type="button" class="btn btn-default" id="assert" style="float: right;margin-right: 10px;">验证</button>-->
-                <!--</div>-->
-            <!--</div>-->
+            <p>验证数据：</p>
+            <div style="height: 100px">
+                <div style="float: left; width: 90%;">
+                    <textarea id="assert_text" class="form-control" rows="3" name=textarea></textarea>
+                </div>
+                <div style="margin-top: 38px; float: right; width: 10%;">
+                    <button type="button" class="btn btn-default" id="assert" style="float: right;margin-right: 10px;">验证</button>
+                </div>
+            </div>
 
             <div style="width: 100%; height: 60px;">
                 <button type="button" class="btn btn-success" id="send" style="float: right;margin-right: 10px;">调试</button>
-                <button type="button" class="btn btn-primary" id="update" style="float: right;margin-right: 10px;">保存</button>
+                <button type="button" class="btn btn-primary" id="save" style="float: right;margin-right: 10px;">保存</button>
             </div>
 
         </form>
@@ -143,8 +143,8 @@
             })
         });
 
-        // 更新
-        $("#update").click(function () {
+        // 保存
+        $("#save").click(function () {
             let project_name = $('select[id="project_name"]').val();
             let module_name = $('select[id="module_name"]').val();
             let name = $("#req_name").val();
@@ -153,7 +153,7 @@
             let parameter = $("#req_parameter").val();
             let req_type = $('input[name="req_type"]:checked').val();
             let header = $("#req_header").val();
-            // let assert_text = $("#assert_text").val();
+            let assert_text = $("#assert_text").val();
 
             if (name === "") {
                 window.alert("名称不能为空");
@@ -176,7 +176,7 @@
                 "header": header,
                 "module": module_name,
                 "project":project_name,
-                // "assert_text": assert_text,
+                "assert_text": assert_text,
             }, function (resp) {
                 if(resp.success === "true"){
                     alert(resp.message);
