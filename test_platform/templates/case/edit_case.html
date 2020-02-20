@@ -1,12 +1,12 @@
-{% extends "case_manage.html" %}
-{% block add_case %}
+{% extends "case/case_manage.html" %}
+{% block edit_case %}
 <fieldset>
     <!--<div id="legend" class="">-->
         <!--<legend class="">调试接口用例</legend>-->
     <!--</div>-->
 
     <div style="width:80%; margin-left: 20px;">
-        <form action="/interface/add_case/" method="get" class="bs-example bs-example-form" role="form" style="margin-top: 30px">
+        <form action="/interface/edit_case/" method="get" class="bs-example bs-example-form" role="form" style="margin-top: 30px">
             {% csrf_token %}
 
             <div>
@@ -76,7 +76,7 @@
 
             <div style="width: 100%; height: 60px;">
                 <button type="button" class="btn btn-success" id="send" style="float: right;margin-right: 10px;">调试</button>
-                <button type="button" class="btn btn-primary" id="save" style="float: right;margin-right: 10px;">保存</button>
+                <button type="button" class="btn btn-primary" id="update" style="float: right;margin-right: 10px;">更新</button>
             </div>
 
         </form>
@@ -96,15 +96,15 @@
 {% load static %}
 <script src='{% static "js/jquery.min.js" %}'></script>
 <script src='{% static "js/jsProject.js" %}'></script>
+<script src='{% static "js/myCase.js" %}'></script>
 <script type="text/javascript">
-    //初始化菜单
-    ProjectInit('project_name','module_name')
 
-    // let url_path = document.location.pathname;
-    // let case_id = url_path.split("/")[3];
 
-    //调用获取用例信息的方法
-    // CaseInit(case_id);
+    let url_path = document.location.pathname;
+    let case_id = url_path.split("/")[3];
+
+    // 调用获取用例信息的方法
+    CaseInit(case_id);
 
     $(document).ready(function () {
         // 调试表格
@@ -127,7 +127,6 @@
             }
 
             // 调试接口
-            console.log(type)
             $.post("/interface/debug_case/", {
                 "req_url": url,
                 "req_method": method,
@@ -143,8 +142,8 @@
             })
         });
 
-        // 保存
-        $("#save").click(function () {
+        // 更新
+        $("#update").click(function () {
             let project_name = $('select[id="project_name"]').val();
             let module_name = $('select[id="module_name"]').val();
             let name = $("#req_name").val();
@@ -166,8 +165,8 @@
             }
 
             // 保存用例接口
-            $.post("/interface/save_case/", {
-                // "cid": case_id,
+            $.post("/interface/update_case/", {
+                "cid": case_id,
                 "name": name,
                 "req_url": url,
                 "req_method": method,
@@ -180,7 +179,7 @@
             }, function (resp) {
                 if(resp.success === "true"){
                     alert(resp.message);
-                    window.location.reload();
+                    window.location.href = "/interface/case_manage/";
                 }else{
                     alert(resp.message);
                 }
@@ -193,9 +192,9 @@
             let result = $("#result").val();
             let assert = $("#assert_text").val();
 
-            if (result === "" || assert === "") {
-                window.alert("验证数据不能为空！");
-            }
+            // if (result === "" || assert === "") {
+            //     window.alert("验证数据不能为空！");
+            // }
 
             //window.alert("发送请求");
             // 发送一个post请求
