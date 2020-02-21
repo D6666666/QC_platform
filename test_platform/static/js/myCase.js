@@ -28,20 +28,31 @@ var CaseInit = function (case_id) {
     }
     // getCaseInfo调用
     getCaseInfo();
-    
 };
 
-// 数据格式
-// var dataList = [{
-//     name: '项目AAAA',
-//     moduleList: [
-//         "模块a", "模块b", "模块c"
-//     ]
-// },
-// {
-//     name: '项目BBB',
-//     moduleList: [
-//         "模块1", "模块2", "模块3"
-//     ]
-// }
-// ]
+
+//获取用例信息列表
+var CaseListInit = function () {
+
+    var options = "";
+    function getCaseListInfo(){
+        // 获取用例信息列表
+        $.get("/interface/get_case_list/", {}, function (resp) {
+            if(resp.success === "true"){
+               let cases = resp.data;
+
+                for (let i =0; i < cases.length; i++){
+                    let option = '<input type="checkbox" name="box" value="' + cases[i].id +'" /> '+ cases[i].name +'<br>';
+                    options = options + option
+                }
+                let devCaseList = document.querySelector(".caseList");
+                devCaseList.innerHTML = options;
+            }else{
+                window.alert("获取用例失败")
+            }
+            //$("#result").html(resp);
+        });
+    }
+    // getCaseListInfo
+    getCaseListInfo();
+};

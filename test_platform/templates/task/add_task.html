@@ -1,0 +1,136 @@
+{% extends "task/task_manage.html" %}
+{% block add_task %}
+<fieldset>
+	<div style="width:80%; margin-left: 20px;">
+		<form class="bs-example bs-example-form" role="form" style="margin-top: 30px">
+
+			<div class="form-group">
+				<label>名称：</label>
+				<input type="text" id="taskName"  class="form-control">
+			</div>
+
+			<div class="form-group">
+				<label>描述：</label>
+				<textarea id="taskDescribe" class="form-control" rows="3" name=textarea></textarea>
+			</div>
+
+			<div class="form-group">
+				<label>用例：</label>
+				<input type="checkbox" id="selectAll" />全选/取消</input>
+				<div class="caseList" style="overflow-y:scroll; height: 200px; background: #FFFFFF; padding-left: 15px;">
+
+				</div>
+
+			</div>
+
+
+			<div style="width: 100%; height: 60px;">
+				<button type="button" class="btn btn-primary" id="saveTask"
+				style="float: right;margin-right: 10px;">保存</button>
+			</div>
+
+		</form>
+
+	</div>
+
+
+
+</fieldset>
+<!--<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>-->
+{% load static %}
+<script src='{% static "js/jquery.min.js" %}'></script>
+<script src='{% static "js/myCase.js" %}'></script>
+<script type="text/javascript">
+
+    CaseListInit();
+    $(document).ready(function () {
+
+        // 保存任务
+        $("#saveTask").click(function () {
+            //获取参数，通过css定位器
+            let tNaem = $("#taskName").val();
+            let tDescribe = $("#taskDescribe").val();
+            if(tNaem === ""){
+                window.alert("任务名称不能为空！");
+                return;
+            }
+            let checkedCase = document.querySelectorAll(".caseList > input");
+            var checkedCaseId = '';
+            for (let i =0; i < checkedCase.length; i++){
+                if (checkedCase[i].checked === true){
+                    let case_id = checkedCase[i].value;
+                    checkedCaseId = checkedCaseId + case_id + ","
+                    }
+                }
+
+            // 保存
+            $.post("/interface/save_task/", {
+                "task_name": tNaem,
+                "task_describe": tDescribe,
+                "task_cases": checkedCaseId,
+            }, function (resp) {
+                if (resp.success === "true"){
+                    window.alert(resp.message);
+                    window.location.reload();
+                }else{
+                    window.alert(resp.message);
+			}
+            })
+        });
+        //全选/全不选操作
+        $("#selectAll").click(function (){
+             var selectAll = document.getElementById("selectAll");
+             var boxs = document.getElementsByName("box");
+             if  (selectAll.checked === false){
+                 for (let i = 0; i < boxs.length; i++) {
+                     boxs[i].checked = false;
+                 }
+             }else{
+                 for (let i = 0; i < boxs.length; i++) {
+                     boxs[i].checked = true;
+                     }
+             }
+        })
+    });
+</script>
+
+<!--解决Forbidden (CSRF token missing or incorrect.): /interface/api_debug/-->
+<script type="text/javascript">
+    $(document).ajaxSend(function(event, xhr, settings) {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    });
+</script>
+{% endblock %}

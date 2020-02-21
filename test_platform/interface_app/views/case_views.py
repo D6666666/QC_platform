@@ -1,8 +1,6 @@
 import requests,json,validators
-from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from interface_app.forms import TestCaseForm
 from django.shortcuts import render
 from interface_app.models import TestCase
 from project_app.forms import ModuleForm
@@ -15,16 +13,16 @@ def case_manage(request):
     if request.method == 'GET':
         # testcases = TestCase.objects.all()
         testcases = TestCase.objects.get_queryset().order_by('id')
-        paginator = Paginator(testcases,5)
+        paginator = Paginator(testcases,10)
         page = request.GET.get("page")
-        form = ModuleForm()
+        # form = ModuleForm()
         try:
             contacts = paginator.page(page)
         except PageNotAnInteger:
             contacts = paginator.page(1)
         except EmptyPage:
             contacts = paginator.page(paginator.num_pages)
-        return render(request,'case/case_manage.html',{'type':'list',"testcases":contacts,"form":form})
+        return render(request,'case/case_manage.html',{'type':'list',"testcases":contacts})
     else:
         return HttpResponse("404")
 
@@ -35,7 +33,7 @@ def search_case_name(request):
         case_name = request.GET.get('case_name', "")
         cases = TestCase.objects.filter(name__contains=case_name)
 
-        paginator = Paginator(cases, 5)
+        paginator = Paginator(cases, 10)
         page = request.GET.get('page')
         try:
             contacts = paginator.page(page)
@@ -97,8 +95,8 @@ def delete_case(request,cid):
 @login_required
 def add_case(request):
     if request.method == 'GET':
-        form = TestCaseForm()
-        return render(request,'case/add_case.html',{'form':form,'type':'add'})
+        # form = TestCaseForm()
+        return render(request,'case/add_case.html',{'type':'add'})
     else:
         return HttpResponse("404")
 
