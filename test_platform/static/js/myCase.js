@@ -32,19 +32,40 @@ var CaseInit = function (case_id) {
 
 
 //获取用例信息列表
-var CaseListInit = function () {
+var CaseListInit = function (task_cases) {
 
     var options = "";
     function getCaseListInfo(){
         // 获取用例信息列表
-        $.get("/interface/get_case_list/", {}, function (resp) {
+        $.get("/interface/get_case_list/", {"task_case":task_cases}, function (resp) {
             if(resp.success === "true"){
-               let cases = resp.data;
+               let cases = resp.data.cases_list;
+               let result = resp.data.check_cases;
+                // for (let i =0; i < cases.length; i++){
+                //     let option = '<input type="checkbox" name="box" value="' + cases[i].id +'" /> '+ cases[i].name +'<br>';
+                //     options = options + option
+                // }
+                console.log(result);
+                console.log(cases);
+                if (result === 'add'){
+                    for (let i =0; i < cases.length; i++){
+                        let option = '<input type="checkbox" name="box" value="' + cases[i].id +'" /> '+ cases[i].name +'<br>';
+                        options = options + option
+                    }
+                }else {
+                    let casesid = result.split(",");
+                    for (let i =0; i < cases.length; i++){
+                        if (casesid.includes(cases[i].id.toString())){
+                            let option = '<input type="checkbox" name="box" value="' + cases[i].id +'" checked /> '+ cases[i].name +'<br>';
+                            options = options + option
+                        }else {
+                            let option = '<input type="checkbox" name="box" value="' + cases[i].id +'" /> '+ cases[i].name +'<br>';
+                            options = options + option
+                        }
 
-                for (let i =0; i < cases.length; i++){
-                    let option = '<input type="checkbox" name="box" value="' + cases[i].id +'" /> '+ cases[i].name +'<br>';
-                    options = options + option
+                    }
                 }
+
                 let devCaseList = document.querySelector(".caseList");
                 devCaseList.innerHTML = options;
             }else{

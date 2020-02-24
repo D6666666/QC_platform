@@ -1,5 +1,5 @@
 {% extends "task/task_manage.html" %}
-{% block add_task %}
+{% block edit_task %}
 <fieldset>
 	<div style="width:80%; margin-left: 20px;">
 		<form class="bs-example bs-example-form" role="form" style="margin-top: 30px">
@@ -40,9 +40,15 @@
 {% load static %}
 <script src='{% static "js/jquery.min.js" %}'></script>
 <script src='{% static "js/myCase.js" %}'></script>
+<script src='{% static "js/myTask.js" %}'></script>
 <script type="text/javascript">
 
-    CaseListInit("add");
+    let url_path = document.location.pathname;
+    let task_id = url_path.split("/")[3];
+
+    // 调用获取任务信息的方法
+    TaskInit(task_id);
+
     $(document).ready(function () {
 
         // 保存任务

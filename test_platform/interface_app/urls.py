@@ -28,8 +28,10 @@ urlpatterns = [
     path('search_task_name/', task_views.search_task_name),
     path('add_task/', task_views.add_task),
     path('delete_task/<int:tid>/', task_views.delete_task),
+    path('edit_task/<int:tid>/', task_views.edit_task),
 
     #api
     path('get_case_list/', task_api.get_case_list),
     path('save_task/', task_api.save_task),
+    path('get_task_info/', task_api.get_task_info),
 ]

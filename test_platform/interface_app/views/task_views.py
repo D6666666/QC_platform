@@ -66,13 +66,11 @@ def add_task(request):
     else:
         return HttpResponse("404")
 
-
-
 #编辑用例
 @login_required
-def edit_case(request,cid):
+def edit_task(request,tid):
     if request.method == 'GET':
-        case_id = request.GET.get("case_id")
-        return render(request,'case/edit_case.html',{'type':'edit'})
+        # task_id = request.GET.get("task_id")
+        return render(request,'task/edit_task.html',{'type':'edit'})
     else:
         return HttpResponse("404")

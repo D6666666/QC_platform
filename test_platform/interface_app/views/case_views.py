@@ -106,7 +106,7 @@ def add_case(request):
 @login_required
 def edit_case(request,cid):
     if request.method == 'GET':
-        case_id = request.GET.get("case_id")
+        # case_id = request.GET.get("case_id")
         return render(request,'case/edit_case.html',{'type':'edit'})
     else:
         return HttpResponse("404")
