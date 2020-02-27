@@ -4,8 +4,7 @@
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from interface_app.models import TestTask
-from project_app.forms import ModuleForm
+from interface_app.models import TestTask,TestResult
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
 #请求用例管理页面
@@ -57,7 +56,7 @@ def delete_task(request,tid):
     TestTask.objects.get(id=tid).delete()
     return HttpResponseRedirect('/interface/task_manage/')
 
-#新增&调试用例页面
+#新增任务
 @login_required
 def add_task(request):
     if request.method == 'GET':
@@ -66,7 +65,7 @@ def add_task(request):
     else:
         return HttpResponse("404")
 
-#编辑用例
+#编辑任务
 @login_required
 def edit_task(request,tid):
     if request.method == 'GET':
@@ -74,3 +73,19 @@ def edit_task(request,tid):
         return render(request,'task/edit_task.html',{'type':'edit'})
     else:
         return HttpResponse("404")
+
+# 查看任务结果列表
+@login_required
+def task_result_list(request, tid):
+    if request.method == "GET":
+        task_obj = TestTask.objects.get(id=tid)
+        result_list = TestResult.objects.filter(task_id=tid)
+
+        return render(request, "task/result_task.html", {
+            "type": "result",
+            "task_name": task_obj.name,
+            "task_result_list": result_list,
+        })
+    else:
+        return HttpResponse("404")
+

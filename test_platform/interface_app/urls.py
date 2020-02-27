@@ -29,9 +29,13 @@ urlpatterns = [
     path('add_task/', task_views.add_task),
     path('delete_task/<int:tid>/', task_views.delete_task),
     path('edit_task/<int:tid>/', task_views.edit_task),
+    # path('result_task/<int:tid>/', task_views.result_task),
+    path('task_result_list/<int:tid>/', task_views.task_result_list),
 
     #api
     path('get_case_list/', task_api.get_case_list),
     path('save_task/', task_api.save_task),
     path('get_task_info/', task_api.get_task_info),
+    path('run_task/', task_api.run_task),
+    path('task_result/', task_api.task_result)
 ]

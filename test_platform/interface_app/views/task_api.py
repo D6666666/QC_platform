@@ -1,14 +1,17 @@
 #!/usr/bin/env python 
 # coding:utf-8 
 #author:cq
-import requests,json,validators
+import requests,json,validators,os,time
 from django.http import HttpResponse,JsonResponse
 from django.contrib.auth.decorators import login_required
 from project_app.models import Module,Project
 from test_platform import common
-from interface_app.models import TestCase,TestTask
+from interface_app.extend.task_thread import TaskThread
+from interface_app.models import TestCase,TestTask,TestResult
 from django.views.decorators.csrf import csrf_exempt
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+task_file = os.path.join(BASE_DIR,"interface_app","extend")
+resource = os.path.join(BASE_DIR,"resource")
 
 #获取接口用例列表
 @csrf_exempt
@@ -70,3 +73,40 @@ def get_task_info(request):
         return common.response_succeed(data=task_info)
     else:
         return HttpResponse("404")
+
+#运行任务
+@csrf_exempt
+@login_required
+def run_task(request):
+    if request.method == "POST":
+        tid = request.POST.get("task_id", "")
+        if tid == "":
+            return common.response_failed("任务ID不能为空")
+
+        task_list = TestTask.objects.all()
+        runing_task = 0
+        for task in task_list:
+            if task.status == 1:
+                runing_task = 1
+                break
+        if runing_task == 1:
+            return common.response_failed("当前有任务正在执行...")
+        else:
+            TaskThread(tid).new_run()
+            return common.response_succeed(message="已执行")
+    else:
+        return common.response_failed("请求方法错误")
+
+# 查看任务结果
+@csrf_exempt
+@login_required
+def task_result(request):
+    if request.method == "POST":
+        rid = request.POST.get("result_id", "")
+        result_obj = TestResult.objects.get(id=rid)
+        data = {
+            "result": result_obj.result,
+        }
+        return common.response_succeed(message="获取成功！", data=data)
+    else:
+        return common.response_failed("请求方法错误")

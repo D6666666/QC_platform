@@ -90,8 +90,18 @@
 
                   <td>{{ task.create_time }}</td>
                   <td>
-                    <a href="/interface/edit_task/{{ task.id }}">编辑</a>
-                    <a href="/interface/delete_task/{{ task.id }}">删除</a>
+                    <a href="#" onclick="RunTask('{{task.id}}')" style="margin-right: 8px;">
+                        <span class="glyphicon glyphicon-play">运行</span>
+                    </a>
+                    <a href="/interface/edit_task/{{ task.id }}/" style="margin-right: 8px;">
+                        <span class="glyphicon glyphicon-edit">编辑</span>
+                    </a>
+                    <a href="/interface/delete_task/{{ task.id }}/" style="margin-right: 8px;">
+                        <span class="glyphicon glyphicon-trash">删除</span>
+                    </a>
+                    <a href="/interface/task_result_list/{{task.id}}/" style="margin-right: 8px;">
+                        <span class="glyphicon glyphicon-list-alt">结果</span>
+                    </a>
                   </td>
                 </tr>
                 {% endfor %}
@@ -151,6 +161,35 @@
         </div>
         {% endif %}
 
+         <!-- 任务结果的查看 -->
+		{% if type == 'result'%}
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<div class="row">
+				{% block task_result_list %}
+
+
+				{% endblock %}
+			</div>
+		</div>
+		{% endif %}
+
       </div>
     </div>
+{% load static %}
+<script src='{% static "js/jquery.min.js" %}'></script>
+<script type="text/javascript">
+	//运行任务
+	function RunTask(tid) {
+		$.post("/interface/run_task/", {
+			"task_id": tid,
+		}, function (resp) {
+			if (resp.success === "true") {
+				window.alert(resp.message);
+				window.location.reload(); // 刷新页面
+			} else {
+				window.alert(resp.message);
+			}
+		});
+	}
+</script>
 {% endblock %}
